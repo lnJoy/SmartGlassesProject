@@ -45,7 +45,7 @@ class SocketClientState extends State<SocketClient> {
 
   Socket clientSocket;
 
-  bool isCamera = false;
+  bool isCamera = true;
 
   bool isPlaying = false;
   FlutterTts _flutterTts;
@@ -216,9 +216,9 @@ class SocketClientState extends State<SocketClient> {
             leading: Text("Camera Switch"),
             //  아이피 입력
             trailing: RaisedButton(
-              child: Text((isCamera == true) ? "On" : "Off"),
+              child: Text((isCamera) ? "Off" : "On"),
               onPressed:
-              (isCamera == true) ? onCamera : offCamera,  //  버튼을 눌렀을 때 클라이언트가 연결돼있으면 연결을 끊고 아니라면 서버 연결
+              (isCamera) ? offCamera : onCamera,  //  버튼을 눌렀을 때 클라이언트가 연결돼있으면 연결을 끊고 아니라면 서버 연결
             ),
           ),
         ],
@@ -301,6 +301,7 @@ class SocketClientState extends State<SocketClient> {
         .then((socket) {
       setState(() {
         clientSocket = socket;
+        isCamera = true;
       });
 
       //  스낵바 출력하여 소켓 연결 여부와 아이피 출력
@@ -313,10 +314,16 @@ class SocketClientState extends State<SocketClient> {
           _speak(String.fromCharCodes(onData).trim());
           setState(() {
             //  itmes에 메시지 삽입
-            items.insert(
-                0,
-                MessageItem(clientSocket.remoteAddress.address,
-                    String.fromCharCodes(onData).trim()));
+            if (String.fromCharCodes(onData).trim() == "on") {
+              isCamera = true;
+            } else if(String.fromCharCodes(onData).trim() == "off") {
+              isCamera = false;
+            } else {
+              items.insert(
+                  0,
+                  MessageItem(clientSocket.remoteAddress.address,
+                      String.fromCharCodes(onData).trim()));
+            }
           });
         },
         onDone: onDone,
@@ -324,6 +331,7 @@ class SocketClientState extends State<SocketClient> {
       );
     }).catchError((e) {
       showSnackBarWithKey(e.toString());
+      print(e.toString());
     });
   }
 
@@ -344,6 +352,7 @@ class SocketClientState extends State<SocketClient> {
     clientSocket.close();
     setState(() {
       clientSocket = null;
+      isCamera = true;
       //  메시지 목록 삭제
       items.clear();
       //  음성 출력 중단
