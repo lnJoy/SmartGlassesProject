@@ -45,6 +45,8 @@ class SocketClientState extends State<SocketClient> {
 
   Socket clientSocket;
 
+  bool isCamera = false;
+
   bool isPlaying = false;
   FlutterTts _flutterTts;
 
@@ -180,32 +182,46 @@ class SocketClientState extends State<SocketClient> {
   //  서버의 아이피를 입력 후 소켓 연결을 할 수 있도록 해주는 위젯
   Widget connectArea() {
     return Card(
-      child: ListTile(
-        dense: true,
-        leading: Text("Server IP"),
-        //  아이피 입력
-        title: TextField(
-          controller: ipCon,
-          decoration: InputDecoration(
-              contentPadding:
-              const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              isDense: true,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-                borderSide: BorderSide(color: Colors.grey[300]),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-                borderSide: BorderSide(color: Colors.grey[400]),
-              ),
-              filled: true,
-              fillColor: Colors.grey[50]),
-        ),
-        trailing: RaisedButton(
-          child: Text((clientSocket != null) ? "Disconnect" : "Connect"),
-          onPressed:
-          (clientSocket != null) ? disconnectFromServer : connectToServer,  //  버튼을 눌렀을 때 클라이언트가 연결돼있으면 연결을 끊고 아니라면 서버 연결
-        ),
+      child: Column(
+        children: [
+          ListTile(
+            dense: true,
+            leading: Text("Server IP"),
+            //  아이피 입력
+            title: TextField(
+              controller: ipCon,
+              decoration: InputDecoration(
+                  contentPadding:
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  isDense: true,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    borderSide: BorderSide(color: Colors.grey[300]),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    borderSide: BorderSide(color: Colors.grey[400]),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[50]),
+            ),
+            trailing: RaisedButton(
+              child: Text((clientSocket != null) ? "Disconnect" : "Connect"),
+              onPressed:
+              (clientSocket != null) ? disconnectFromServer : connectToServer,  //  버튼을 눌렀을 때 클라이언트가 연결돼있으면 연결을 끊고 아니라면 서버 연결
+            ),
+          ),
+          ListTile(
+            dense: true,
+            leading: Text("Camera Switch"),
+            //  아이피 입력
+            trailing: RaisedButton(
+              child: Text((isCamera == true) ? "On" : "Off"),
+              onPressed:
+              (isCamera == true) ? onCamera : offCamera,  //  버튼을 눌렀을 때 클라이언트가 연결돼있으면 연결을 끊고 아니라면 서버 연결
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -335,9 +351,32 @@ class SocketClientState extends State<SocketClient> {
     });
   }
 
-  void sendMessage(String message) {
+  void offCamera() {
+    print("off camera");
+    //  소켓 연결 끊기
+    setState(() {
+      isCamera = false;
+      //  메시지 목록 삭제
+      sendMessage(0);
+      //  음성 출력 중단
+    });
+  }
+
+  void onCamera() {
+    print("on camera");
+    //  소켓 연결 끊기
+    setState(() {
+      isCamera = true;
+      //  메시지 목록 삭제
+      sendMessage(1);
+      //  음성 출력 중단
+      _stop();
+    });
+  }
+
+  void sendMessage(int message) {
     //  소켓 서버에 메시지 전송
-    clientSocket.write("$message\n");
+    clientSocket.write(message);
   }
 
   void _storeServerIP() async {
@@ -364,7 +403,7 @@ class SocketClientState extends State<SocketClient> {
       _speak(msgCon.text);
     });
     //  소켓 전송
-    sendMessage(msgCon.text);
+    // sendMessage(msgCon.text)
     //  텍스트 필드 비우기
     msgCon.clear();
   }
