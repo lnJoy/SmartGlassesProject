@@ -1,0 +1,10 @@
+[Unit]
+Description=Smart Glasses Object Detection
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/SmartGlasses
+ExecStart=/usr/bin/python3 test.py
+
+[Install]
+WantedBy=multi-user.target
