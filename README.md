@@ -1,6 +1,5 @@
 # SmartGlasses
 
-**[뱃지나 프로젝트에 관한 이미지들이 이 위치에 들어가면 좋습니다]**  
 Pi Camera와 Raspberry pi로 사물을 인식한 값을 스마트폰으로 전송하여 스마트폰의 스피커, 이어폰으로 출력해줍니다.
 
 ## Getting Started / 어떻게 시작하나요?
@@ -11,23 +10,9 @@ Camera Switch 부분에 On/Off 버튼을 통해 카메라를 제어할 수 있�
 
 ### Installing / 설치
 
-아래 사항들로 현 프로젝트에 관한 모듈들을 설치할 수 있습니다.
-
+Raspberry Pi 구축은 [여기](https://github.com/lnJoy/SmartGlassesProject/blob/master/RaspberryPi.md) <br>
+Socket Server 설치는 [여기](https://github.com/lnJoy/SmartGlassesProject/tree/detection)
 
 ## Running the tests / 테스트의 실행
 
-어떻게 테스트가 이 시스템에서 돌아가는지에 대한 설명을 합니다
-
-### 테스트는 이런 식으로 동작합니다
-
-왜 이렇게 동작하는지, 설명합니다
-
-```
-예시 
-```
-
-### 테스트는 이런 식으로 작성하시면 됩니다
-
-```
-예시
-```
+<img src="https://user-images.githubusercontent.com/50934835/122957373-d709fb00-d3bc-11eb-8871-c9dd5c6785d3.png" width="30%"> <img src="https://user-images.githubusercontent.com/50934835/122958420-c908aa00-d3bd-11eb-995b-2de201fbb48a.png" width="30%">
